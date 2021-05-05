@@ -9,14 +9,11 @@ import {
 import Link from 'next/link'
 import { GetServerSidePropsContext } from 'next'
 import { SigninForm } from '../components/SigninForm'
-import { getLoginSession } from '../lib/auth'
-import prisma from '../lib/db'
+import { getViewer } from '../lib/api'
 
 export async function getServerSideProps ({ req }: GetServerSidePropsContext) {
-  let session = null
-  if (req) session = await getLoginSession(req)
-  if (session) {
-    await prisma.user.findFirst({ where: { id: session.id } })
+  const user = await getViewer(req)
+  if (user) {
     return {
       redirect: {
         destination: '/app',
@@ -33,7 +30,7 @@ function SignIn () {
   const color = useColorModeValue('dark', 'light')
 
   return (
-      <Center height='100%' flexDirection='column'>
+      <Center flexDirection='column' height='100%'>
         <VStack spacing='1em'>
           <Box bg={bg} color={color} borderWidth="1px" borderRadius="lg" w={[400, 400, 450]} padding='20px' display='block'>
               <Center>

@@ -8,9 +8,11 @@ type Props = {
 
 export const Layout = ({ children }: Props) => {
   return (
-    <Container overflowX='hidden' padding="0 20vw" width='100vw' height='100vh'>
+    <Container width='100%' height='100vh' m='0' p='0' boxSizing='border-box'>
       <NavBar />
-      {children}
+      <div className='principal-container'>
+        {children}
+      </div>
     </Container>
   )
 }

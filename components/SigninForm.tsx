@@ -59,7 +59,7 @@ export const SigninForm = () => {
           status: 'success',
           duration: 9000,
           isClosable: true,
-          position: 'top-right'
+          position: 'bottom-right'
         })
         !loading && Promise.resolve(router.push('/app'))
       }

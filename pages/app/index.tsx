@@ -1,15 +1,12 @@
 import Link from 'next/link'
 import { Loading } from '../../components/Loading'
-import { getLoginSession } from '../../lib/auth'
-import prisma from '../../lib/db'
 import { User } from 'prisma'
 import { GetServerSidePropsContext } from 'next'
+import { getViewer } from '../../lib/api'
 
 export async function getServerSideProps ({ req } : GetServerSidePropsContext) {
-  let session = null
-  if (req) session = await getLoginSession(req)
-  if (session) {
-    const user = await prisma.user.findFirst({ where: { id: session.id } })
+  const user = await getViewer(req)
+  if (user) {
     return { props: { user } }
   } else {
     return {

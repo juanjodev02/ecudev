@@ -1,8 +1,9 @@
 import { AuthenticationError, UserInputError, ApolloError } from 'apollo-server-micro'
 import bcrypt from 'bcrypt'
-import { setLoginSession, getLoginSession } from '../lib/auth'
+import { setLoginSession } from '../lib/auth'
 import { removeTokenCookie } from '../lib/authCookies'
 import prisma from '../lib/db'
+import { getViewer, createUser } from '../lib/api'
 
 const validatePassword = async (plainPassword: string, encryptedPassword: string) => {
   return bcrypt.compare(plainPassword, encryptedPassword)
@@ -12,14 +13,8 @@ export const resolvers = {
   Query: {
     async viewer (_parent: any, _args: any, context: any, _info: any) {
       try {
-        let session = null
-        if (context.req) session = await getLoginSession(context.req)
-        if (session) {
-          const user = await prisma.user.findFirst({ where: { id: session.id } })
-          return { ...user }
-        } else {
-          return null
-        }
+        const viewer = await getViewer(context.req)
+        return viewer
       } catch (error) {
         console.log(error)
         throw new AuthenticationError(
@@ -31,21 +26,7 @@ export const resolvers = {
   Mutation: {
     async signUp (_parent: any, args: any, _context: any, _info: any) {
       try {
-        const encryptedPassword = await bcrypt.hash(args.input.password, 10)
-        const newUser = await prisma.user.create({
-          data: {
-            username: args.input.username,
-            facebook: 'undefined',
-            twitter: 'undefined',
-            github: 'undefined',
-            auth: {
-              create: {
-                email: args.input.email,
-                password: encryptedPassword
-              }
-            }
-          }
-        })
+        const newUser = await createUser(args.input.email, args.input.password, args.input.username)
         return { user: { ...newUser } }
       } catch (error) {
         console.error(error)

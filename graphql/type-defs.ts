@@ -2,16 +2,35 @@ import { gql } from '@apollo/client'
 
 export const typeDefs = gql`
   type Auth {
-    email: String!
-    password: String!
+    email: String
+    password: String
   }
 
-  type User {
-    id: ID!
-    username: String!
+  type Post {
+    id: ID
+    title: String
+    date: String
+    coverImage: String
+    excerpt: String
+    ogImage: String
+    published: Boolean
+  }
+
+  type Author {
+    id: ID
+    name: String
+    lastName: String
     facebook: String
     twitter: String
     github: String
+    posts: [Post]
+    user: User
+  }
+
+  type User {
+    id: ID
+    username: String
+    author: Author
   }
 
   input SignUpInput {
@@ -26,11 +45,11 @@ export const typeDefs = gql`
   }
 
   type SignUpPayload {
-    user: User!
+    user: User
   }
 
   type SignInPayload {
-    user: User!
+    user: User
   }
 
   type Query {

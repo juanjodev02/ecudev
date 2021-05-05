@@ -1,4 +1,4 @@
-import { Flex, Box, Stack, Button, Spacer, Heading } from '@chakra-ui/react'
+import { Flex, Box, Stack, Button, Spacer, Heading, useColorModeValue } from '@chakra-ui/react'
 import Link from 'next/link'
 
 import { DarkModeSwitch } from '../components/DarkModeSwitch'
@@ -37,8 +37,10 @@ const NavBarOptions = () => {
 }
 
 export const NavBar = () => {
+  const bg = useColorModeValue('#FFFFFF', 'black')
+  const color = useColorModeValue('#1B202B', '#FFFFFF')
   return (
-    <Flex justifyContent='space-between' width='100%'>
+    <Flex shadow='sm' justifyContent='space-between' width='100%' padding='.3em 15vw' position='sticky' top='0' left='0' right='0' background={bg} color={color}>
       <Box p="2">
         <Heading size='lg'>ECUDEV</Heading>
       </Box>
